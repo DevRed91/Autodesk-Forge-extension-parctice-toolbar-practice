@@ -339,15 +339,6 @@ Autodesk.ADN.Viewing.Extension.Toolbar = function (viewer, options) {
 
     $(_viewer.container).append(toolbarDivHtml);
 
-    $('#divToolbar').css({
-      'top': '20%',
-      'left': '5%',
-      // 'width': '200px',
-      'z-index': '100',
-      'position': 'absolute',
-      // 'background-color': 'blue'
-    });
-
     var toolbar = new Autodesk.Viewing.UI.ToolBar(true);
 
     var sideButtons = new Autodesk.Viewing.UI.ControlGroup(
