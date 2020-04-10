@@ -332,10 +332,15 @@ Autodesk.ADN.Viewing.Extension.Toolbar = function (viewer, options) {
   /////////////////////////////////////////////
   function createDivToolbar() {
 
-    // $(htmlDlg).appendTo('#forgeViewer');
+    // $(htmlDlg).append('#forgeViewer');
 
-    var toolbarDivHtml =
-      '<div id="divToolbar"> </div>';
+    // var toolbarDivHtml =
+    //   '<div id="divToolbar"> </div>';
+
+    // $(_viewer.container).append(toolbarDivHtml);
+
+    let toolbarDivHtml = document.createElement("div");
+    toolbarDivHtml.id = "divToolbar";
 
     $(_viewer.container).append(toolbarDivHtml);
 
