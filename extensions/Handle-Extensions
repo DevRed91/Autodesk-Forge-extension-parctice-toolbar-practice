@@ -13,7 +13,7 @@ class HandleSelectionExtension extends Autodesk.Viewing.Extension {
     unload() {
         // Clean our UI elements if we added any
         if (this._group) {
-            this._group.removeControl(this._button);
+            this._group.removeControl(handleButton);
             if (this._group.getNumberOfControls() === 0) {
                 this.viewer.toolbar.removeControl(this._group);
             }
