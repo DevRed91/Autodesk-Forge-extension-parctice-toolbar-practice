@@ -79,9 +79,9 @@ class HandleSelectionExtension extends Autodesk.Viewing.Extension {
             const selection = this.viewer.getSelection();
             this.viewer.clearSelection();
             this._panel.removeAllProperties();
-            // Anything selected?
+           
+           // Anything selected?
             if (selection.length > 0) {
-
                 // If panel is NOT visible, exit the function
                 if (!this._panel.isVisible())
                     return;
