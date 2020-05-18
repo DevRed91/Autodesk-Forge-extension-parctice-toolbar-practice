@@ -71,10 +71,6 @@ class HandleSelectionExtension extends Autodesk.Viewing.Extension {
             if (this._panel == null) {
                 this._panel = new ModelSummaryPanel(this.viewer, this.viewer.container, 'quantityChartPanel', 'Quantity Chart');
             }
-
-            // Show/hide docking panel
-            this._panel.setVisible(!this._panel.isVisible());
-
             // Get current selection
             const selection = this.viewer.getSelection();
             this.viewer.clearSelection();
@@ -82,6 +78,9 @@ class HandleSelectionExtension extends Autodesk.Viewing.Extension {
            
            // Anything selected?
             if (selection.length > 0) {
+                
+                // Show/hide docking panel
+                this._panel.setVisible(!this._panel.isVisible());
                 // If panel is NOT visible, exit the function
                 if (!this._panel.isVisible())
                     return;
