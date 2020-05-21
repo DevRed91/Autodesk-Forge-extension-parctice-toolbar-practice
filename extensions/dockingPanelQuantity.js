@@ -1,4 +1,5 @@
 
+
 class DockingQuantityButton extends Autodesk.Viewing.Extension {
     constructor(viewer, options) {
         super(viewer, options);
@@ -51,6 +52,51 @@ class DockingQuantityButton extends Autodesk.Viewing.Extension {
         return {background:background, borders:borders};
     }
 
+    drawChart(propertyName){
+        let getLabels = (propertyName) => {
+            return Object.keys(this._modelData[propertyName]);
+        }
+        let getCountInstances = (propertyName) => {
+                return Object.keys(this._modelData[propertyName]).map((key) => this._modelData[propertyName][key].length);
+        }
+
+        let ctx = document.getElementById('barChart');
+
+        let dataSet = getCountInstances(propertyName);
+        console.log(dataSet);
+        let colors = this.dynamicColors(getLabels(propertyName).length);
+        new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'bar',
+    
+                // The data for our dataset
+                data: {
+                    labels: getLabels(propertyName),
+                    datasets: [{
+                        label: 'Space Demarcation',
+                        backgroundColor: colors.background,
+                        borderColor: colors.borders,
+                        borderWidth: 1,
+                        data: dataSet
+                    }]
+                },
+    
+                // Configuration options go here
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                },
+                legend: {
+                    display: false
+                },
+            });
+    }
+
     onToolbarCreated() {
         // Create a new toolbar group if it doesn't exist
         this._group = this.viewer.toolbar.getControl('AwesomeExtensionsToolbar');
@@ -73,7 +119,7 @@ class DockingQuantityButton extends Autodesk.Viewing.Extension {
             if (!this._panel.isVisible())
                 return;
 
-            let ctx = document.getElementById('barChart');
+            
                 
                 this.getAllLeafComponents((dbIds) => {
                     let count = dbIds.length;
@@ -95,57 +141,14 @@ class DockingQuantityButton extends Autodesk.Viewing.Extension {
                                 if (this._modelData[prop.displayName][prop.displayValue] == null) this._modelData[prop.displayName][prop.displayValue] = [];
                                 this._modelData[prop.displayName][prop.displayValue].push(dbId);
 
-                                let getLabels = (propertyName) => {
-                                    return Object.keys(this._modelData[propertyName]);
-                                }
-                                let getCountInstances = (propertyName) => {
-                                        return Object.keys(this._modelData[propertyName]).map((key) => this._modelData[propertyName][key].length);
-                                }
+                               
 
                                 if (prop.displayName === 'Category'){
-                                   if(prop.displayValue !== 'Topography'){
-                                        // console.log(prop);
-                                        // console.log(prop.displayName, prop.displayValue.replace('Revit', ''));
-                                        // console.log(Object.keys(this._modelData[prop.displayName]));
-                                        // console.log(Object.keys(this._modelData[prop.displayName][prop.displayValue]));
-                                        // console.log(Object.keys(this._modelData[prop.displayName]).map((key) => this._modelData[prop.displayName][key].length));
-                                        let dataSet = getCountInstances(prop.displayName);
-                                        console.log(dataSet);
-                                        let colors = this.dynamicColors(getLabels(prop.displayName).length);
-                                        new Chart(ctx, {
-                                                // The type of chart we want to create
-                                                type: 'bar',
-                                    
-                                                // The data for our dataset
-                                                data: {
-                                                    labels: getLabels(prop.displayName),
-                                                    datasets: [{
-                                                        label: 'Space Demarcation',
-                                                        backgroundColor: colors.background,
-                                                        borderColor: colors.borders,
-                                                        borderWidth: 1,
-                                                        data: dataSet
-                                                    }]
-                                                },
-                                    
-                                                // Configuration options go here
-                                                options: {
-                                                    scales: {
-                                                        yAxes: [{
-                                                            ticks: {
-                                                                beginAtZero: true
-                                                            }
-                                                        }]
-                                                    }
-                                                },
-                                                legend: {
-                                                    display: false
-                                                },
-                                            });
+                                   if(prop.displayValue !== ['Topography']){
+                                       this.drawChart(prop.displayName);
                                    }
 
                                 }
-                                
 
                             })
 
