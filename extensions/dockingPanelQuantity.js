@@ -140,7 +140,7 @@ class DockingQuantityButton extends Autodesk.Viewing.Extension {
                                 this._modelData[prop.displayName][prop.displayValue].push(dbId);
                                 
                                 if (prop.displayName === 'Category'){
-                                   if(prop.displayValue !== ['Topography']){
+                                   if(prop.displayValue !== 'Topography'){
                                        this.drawChart(prop.displayName);
                                    }
 
