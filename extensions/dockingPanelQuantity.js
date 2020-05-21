@@ -119,8 +119,6 @@ class DockingQuantityButton extends Autodesk.Viewing.Extension {
             if (!this._panel.isVisible())
                 return;
 
-            
-                
                 this.getAllLeafComponents((dbIds) => {
                     let count = dbIds.length;
                     dbIds.forEach((dbId) => {
@@ -140,9 +138,7 @@ class DockingQuantityButton extends Autodesk.Viewing.Extension {
                                 if (this._modelData[prop.displayName] == null) this._modelData[prop.displayName] = {};
                                 if (this._modelData[prop.displayName][prop.displayValue] == null) this._modelData[prop.displayName][prop.displayValue] = [];
                                 this._modelData[prop.displayName][prop.displayValue].push(dbId);
-
-                               
-
+                                
                                 if (prop.displayName === 'Category'){
                                    if(prop.displayValue !== ['Topography']){
                                        this.drawChart(prop.displayName);
