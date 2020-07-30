@@ -62,7 +62,7 @@ class DockingChartButton extends Autodesk.Viewing.Extension {
         return {background:background, borders:borders};
     }
 
-    modelData(){
+  /*  modelData(){
         this.getAllLeafComponents((dbIds) => {
             let count = dbIds.length;
 
@@ -77,7 +77,7 @@ class DockingChartButton extends Autodesk.Viewing.Extension {
                 })
             })
         })
-    }
+    }*/
 
     drawChart(){
         let ctx = document.getElementById('pieChart');
