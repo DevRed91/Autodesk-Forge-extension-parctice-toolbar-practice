@@ -1,9 +1,32 @@
+class ModelSummaryPanel extends Autodesk.Viewing.UI.PropertyPanel {
+    constructor(viewer, container, id, title, options) {
+        super(container, id, title, options);
+        this.viewer = viewer;
+
+        this.container.style.top = "10px";
+        this.container.style.left = "10px";
+        this.container.style.width = "600";
+        this.container.style.height = "600";
+        this.container.style.resize = "auto";
+        this.container.style.backgroundColor = 'rgba(255, 255, 255, 0.75)';
+    }
+    // initialize(){
+    //     this.container.style.top = "10px";
+    //     this.container.style.left = "10px";
+    //     this.container.style.width = "600";
+    //     this.container.style.height = "600";
+    //     this.container.style.resize = "auto";
+    //     this.container.style.backgroundColor = 'rgba(255, 255, 255, 0.75)';
+    // }
+
+}
+/////////////////////////////////////////
 class HandleSelectionExtension extends Autodesk.Viewing.Extension {
     constructor(viewer, options) {
         super(viewer, options);
         this._group = null;
         this._button = null;
-        this._modelData = {};
+        // this._modelData = {};
     }
 
     load() {
@@ -36,19 +59,6 @@ class HandleSelectionExtension extends Autodesk.Viewing.Extension {
 
     }
 
-    getAllLeafComponents(callback) {
-        this.viewer.getObjectTree(function (tree) {
-            let leaves = [];
-            tree.enumNodeChildren(tree.getRootId(), function (dbId) {
-                if (tree.getChildCount(dbId) === 0) {
-                    leaves.push(dbId);
-                }
-            }, true);
-            callback(leaves);
-        });
-    }
-
-
 
     onToolbarCreated() {
         // Create a new toolbar group if it doesn't exist
@@ -57,7 +67,6 @@ class HandleSelectionExtension extends Autodesk.Viewing.Extension {
             this._group = new Autodesk.Viewing.UI.ControlGroup('AwesomeExtensionsToolbar');
             this.viewer.toolbar.addControl(this._group);
         }
-
 
         let handleButton = this.createButton(
             'handleSelectionExtensionButton',
@@ -69,40 +78,45 @@ class HandleSelectionExtension extends Autodesk.Viewing.Extension {
         handleButton.onClick = (ev) => {
             // Check if the panel is created or not
             if (this._panel == null) {
-                this._panel = new ModelSummaryPanel(this.viewer, this.viewer.container, 'quantityChartPanel', 'Quantity Chart');
+                this._panel = new ModelSummaryPanel(this.viewer, this.viewer.container, 'quantityChartPanel', 'Object Property');
             }
+
             // Get current selection
             const selection = this.viewer.getSelection();
             this.viewer.clearSelection();
             this._panel.removeAllProperties();
-           
-           // Anything selected?
+
+            // Show/hide docking panel
+            this._panel.setVisible(!this._panel.isVisible());
+            // Anything selected?
             if (selection.length > 0) {
-                
-                // Show/hide docking panel
-                this._panel.setVisible(!this._panel.isVisible());
-                // If panel is NOT visible, exit the function
-                if (!this._panel.isVisible())
-                    return;
 
                 let isolated = [];
                 // Iterate through the list of selected dbIds
                 selection.forEach((dbId) => {
+        
+                    // If panel is NOT visible, exit the function
+                    if (!this._panel.isVisible())
+                    return;
                     // Get properties of each dbId
-                    this.viewer.getProperties(dbId, (props) => {
+                    this.viewer.model.getProperties(dbId, (props) => {
                         props.properties.forEach((item) => {
-
+                          // console.log(item);
                             switch (item.displayName){
+                                case 'Category':
+                                  //  console.log(item.displayName, item.displayValue.replace('Revit', ''));
+                                    this._panel.addProperty(item.displayName, item.displayValue.replace('Revit', ''));
+                                    break;
                                 case 'Width':
-                                    console.log(Math.round(item.displayValue));
+                                 //   console.log(Math.round(item.displayValue));
                                     this._panel.addProperty(item.displayName, Math.round(item.displayValue));
                                     break;
                                 case 'Height':
-                                    console.log(Math.round(item.displayValue));
+                                  //  console.log(Math.round(item.displayValue));
                                     this._panel.addProperty(item.displayName, Math.round(item.displayValue));
                                     break;
                                 case 'Area':
-                                    console.log(Math.round(item.displayValue));
+                                  //  console.log(Math.round(item.displayValue));
                                     this._panel.addProperty(item.displayName, `${Math.round(item.displayValue)} Sq.m.`);
                                     break;
                             }
@@ -122,7 +136,6 @@ class HandleSelectionExtension extends Autodesk.Viewing.Extension {
                 this.viewer.isolate(0);
             }
         }
-
 
         this._group.addControl(handleButton);
     }
